@@ -27,8 +27,8 @@ def display_file_content(file_name):
 
 # 主程序
 def main():
-    with st.container(border=True):
-        st.write("本项目用于展示我在一生一芯项目中的体会和项目要求提交的内容。为了方便编辑，本项目改用markdown和xlsx文件而非streamlit页面。在侧边栏选择要显示的文件，以下为选中的文件内容：")
+    with st.expander("项目说明"):
+        st.write("本项目用于展示我在一生一芯项目中的体会和项目要求提交的内容。为了方便编辑，本项目改用markdown和xlsx文件而非streamlit页面。在侧边栏选择要显示的文件，下面是选中的文件内容。")
     
     # 获取排序后的文件列表
     files = get_files()
