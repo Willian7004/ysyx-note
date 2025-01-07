@@ -1,0 +1,84 @@
+使用streamlit写一个程序，实现以下功能：
+1.当前目录下files文件夹中所有.md和.xlsx文件的文件名开头为数字，读取数字并从小到大排序
+2.在侧边栏创建与排序后的文件名称相同的单选按钮，不显示文件扩展名。选择的文件为.md文件时，用st.markdown显示。选择的文件为.xlsx文件时，用pandas读取文件并使用st.dataframe显示
+
+要实现这个功能，你可以使用Streamlit来创建一个简单的应用程序。以下是一个示例代码，展示了如何实现你描述的功能：
+
+```python
+import os
+import streamlit as st
+import pandas as pd
+
+# 获取当前目录下的files文件夹中的所有.md和.xlsx文件
+def get_files():
+    files = os.listdir('files')
+    md_files = [f for f in files if f.endswith('.md')]
+    xlsx_files = [f for f in files if f.endswith('.xlsx')]
+    all_files = md_files + xlsx_files
+    # 过滤出文件名以数字开头的文件
+    filtered_files = [f for f in all_files if f[0].isdigit()]
+    # 按文件名开头的数字排序
+    sorted_files = sorted(filtered_files, key=lambda x: int(x.split('_')[0]))
+    return sorted_files
+
+# 显示文件内容
+def display_file_content(file_name):
+    file_path = os.path.join('files', file_name)
+    if file_name.endswith('.md'):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        st.markdown(content)
+    elif file_name.endswith('.xlsx'):
+        df = pd.read_excel(file_path)
+        st.dataframe(df)
+
+# 主程序
+def main():
+    st.title("文件查看器")
+    
+    # 获取排序后的文件列表
+    files = get_files()
+    
+    # 在侧边栏创建单选按钮
+    selected_file = st.sidebar.radio("选择文件", [os.path.splitext(f)[0] for f in files])
+    
+    # 根据选择的文件显示内容
+    for file in files:
+        if selected_file == os.path.splitext(file)[0]:
+            display_file_content(file)
+            break
+
+if __name__ == "__main__":
+    main()
+```
+
+### 代码说明：
+1. **get_files()** 函数：
+   - 获取 `files` 文件夹中的所有 `.md` 和 `.xlsx` 文件。
+   - 过滤出文件名以数字开头的文件。
+   - 按文件名开头的数字从小到大排序。
+
+2. **display_file_content(file_name)** 函数：
+   - 根据文件扩展名，使用 `st.markdown` 显示 `.md` 文件内容，或使用 `pandas` 读取 `.xlsx` 文件并用 `st.dataframe` 显示。
+
+3. **main()** 函数：
+   - 在侧边栏创建单选按钮，按钮的标签是文件名（不包含扩展名）。
+   - 根据用户选择的文件，调用 `display_file_content` 函数显示文件内容。
+
+### 使用方法：
+1. 将上述代码保存为一个Python文件，例如 `app.py`。
+2. 确保在当前目录下有一个名为 `files` 的文件夹，并在其中放置一些以数字开头的 `.md` 和 `.xlsx` 文件。
+3. 在终端中运行 `streamlit run app.py`，然后在浏览器中打开Streamlit应用程序。
+
+### 示例文件结构：
+```
+.
+├── app.py
+└── files
+    ├── 1_example.md
+    ├── 2_example.xlsx
+    ├── 3_another_example.md
+    └── 4_another_example.xlsx
+```
+
+运行程序后，你可以在侧边栏选择文件，程序会根据文件类型显示相应的内容。
