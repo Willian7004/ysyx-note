@@ -1,5 +1,5 @@
 ### 课程概览与 shell
-'''shell
+```shell
 (base) william@william-T5-Series:~$ echo $SHELL
 /bin/bash
 (base) william@william-T5-Series:~$ mkdir tmp
@@ -45,5 +45,6 @@ content-length: 8285
 cat: /sys/module/zfs/properties.vdev/capacity: 是一个目录
 cat: /sys/module/zfs/properties.pool/capacity: 是一个目录
 (base) william@william-T5-Series:~$ 
-'''
+```
+本次习题通过搜索完成了部分内容，写入刚开始按习惯用了vim（主要是命令行用vim，大部分时候都用图形界面），后面根据提示换成用>>追加。
 
