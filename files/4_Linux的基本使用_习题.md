@@ -48,3 +48,78 @@ cat: /sys/module/zfs/properties.pool/capacity: 是一个目录
 ```
 本次习题通过搜索完成了部分内容，写入刚开始按习惯用了vim（主要是命令行用vim，大部分时候都用图形界面），后面根据提示换成用>>追加。
 
+### Shell 工具和脚本
+
+**1**
+```shell
+(base) william@william-T5-Series:~/下载/GitHub/ysyx-workbench$ ls -a
+.  ..  .git  .gitignore  init.sh  Makefile  npc  README.md
+(base) william@william-T5-Series:~/下载/GitHub/ysyx-workbench$ ls -h
+init.sh  Makefile  npc  README.md
+(base) william@william-T5-Series:~/下载/GitHub/ysyx-workbench$ ls -t
+Makefile  init.sh  npc  README.md
+(base) william@william-T5-Series:~/下载/GitHub/ysyx-workbench$ ls --color=auto
+init.sh  Makefile  npc  README.md
+```
+**2**
+
+/home/william/tmp/marco.sh
+```shell
+marco() {
+     export MARCO=$(pwd)
+ }
+ polo() {
+     cd "$MARCO"
+ }
+```
+```shell
+(base) william@william-T5-Series:~/tmp$ source /home/william/tmp/marco.sh
+(base) william@william-T5-Series:~/tmp$ marco
+(base) william@william-T5-Series:~/tmp$ cd
+(base) william@william-T5-Series:~$ polo
+
+```
+**3**
+
+（题目中的脚本保存到error_test.sh）
+
+用于运行的脚本run_error_test.sh
+```shell
+#!/bin/bash
+
+# 初始化计数器
+count=0
+
+# 无限循环
+while true; do
+    # 增加计数器
+    ((count++))
+    
+    # 运行 error_test.sh 并将输出追加到 error_test.log
+    sudo bash ./error_test.sh >> error_test.log 2>&1
+    
+    # 检查上一个命令的退出状态
+    if [ $? -eq 1 ]; then
+        # 如果退出状态为1，打印运行次数并退出循环
+        echo "脚本在运行 $count 次后出错"
+        break
+    fi
+done
+```
+**4**
+```bash
+find . -type f -name "*.html" -print0 | xargs -0 zip html_files.zip
+```
+**5**
+```bash
+(base) william@william-T5-Series:~/tmp$ find . -type f -exec ls -ltu {} + | awk '{for(i=8; i<=NF; i++) printf "%s ", $i; print ""}'
+17:24 ./html_files.zip 
+17:24 ./missing/test2.html 
+17:24 ./test 1.html 
+16:17 ./error_test.log 
+16:17 ./run_error_test.sh 
+16:11 ./error_test.sh 
+15:17 ./marco.sh 
+12:20 ./missing/semester 
+```
+
