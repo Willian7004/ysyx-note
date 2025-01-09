@@ -262,6 +262,8 @@ a88b4eac (Anish Athalye  2020-01-17 15:26:30 -0500 18) collections:
 
 ```
 
+补充：目前用的Linux Mint在默认配置下不能正常使用git，需要在sshconfig中把22端口改为443端口。github disktop和github cli都没有这一问题。
+
 **3**
 
 ```bash
