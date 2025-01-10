@@ -67,3 +67,10 @@ make: *** [/home/william/下载/GitHub/ics2024/nemu/scripts/build.mk:34：/home/
 搜索得出需要安装libreadline-dev，安装后编译通过。
 
 后面的步骤与文档一致，这里不另做说明。
+
+### 搭建verilator仿真环境
+
+文档中说apt源中的verilator的版本较旧，实际版本为5.020，比文档中的5.008版本新。我在群里提到这一情况，群友说文档讲的应该是Ubuntu20.04的版本情况，而我目前用的Linux Mint22是Ubuntu24.04的下游版本。
+
+文档中没有说明verilator的使用方法。用man verilator得到的是指令说明，官网的操作说明相对详细。
+
