@@ -277,4 +277,105 @@ endmodule
 
 **5.模块和向量**
 ```verilog
+module top_module ( 
+    input clk, 
+    input [7:0] d, 
+    input [1:0] sel, 
+    output reg [7:0] q 
+);
+    wire [7:0] q1;
+    wire [7:0] q2;
+    wire [7:0] q3;
+
+    my_dff8 instance1(clk, d, q1);
+    my_dff8 instance2(clk, q1, q2);
+    my_dff8 instance3(clk, q2, q3);
+
+    always @* //case要放到always内
+    begin 
+        case(sel) //在sel为相应的值的时候执行操作
+            2'b00: q = d;
+            2'b01: q = q1;
+            2'b10: q = q2;
+            2'b11: q = q3;             
+        endcase
+    end   
+endmodule
+```
+
+**6.加法器1**
+```verilog
+module top_module(
+    input [31:0] a,
+    input [31:0] b,
+    output [31:0] sum
+);
+    wire cout; //连接进位引脚
+    add16 instance1( a[15:0] , b[15:0], 0, sum[15:0],cout );
+    add16 instance2( a[31:16] , b[31:16],cout, sum[31:16],0 );
+endmodule
+```
+
+**7.加法器2**
+```verilog
+module add1 (input a, input b, input cin, output sum, output cout); //全加器
+    assign sum = a ^ b ^ cin; //输出是输入的异或
+    assign cout = a & b | a & cin | b & cin; //进位是输入的同或
+endmodule
+
+module top_module (
+    input [31:0] a,
+    input [31:0] b,
+    output [31:0] sum
+);
+    wire cout0;
+    add16 instance1(a[15:0], b[15:0], 0, sum[15:0], cout0);
+    add16 instance2(a[31:16], b[31:16], cout0, sum[31:16], 0);
+endmodule
+```
+
+**8.带选择加法器**
+```verilog
+module top_module( 
+    input [31:0] a,
+    input [31:0] b,
+    output [31:0] sum
+);
+    wire cout0;
+	add16 instance1(a[15:0], b[15:0], 0, sum[15:0], cout0);
+    wire [15:0] sum_hi0;
+    wire [15:0] sum_hi1;
+    add16 instance2(a[31:16], b[31:16], 0, sum_hi0, 0);
+    add16 instance3(a[31:16], b[31:16], 1, sum_hi1, 0);
+    always @* //case要放到always内
+    begin 
+        case(cout0) //根据cout0的值选择合适的加法结果
+            'b0: sum[31:16]=sum_hi0;
+            'b1: sum[31:16]=sum_hi1;           
+        endcase
+    end  
+endmodule
+```
+
+**9.加法器-减法器**
+```verilog
+module top_module(
+    input [31:0] a,
+    input [31:0] b,
+    input sub,
+    output [31:0] sum
+);
+    wire [31:0] b1;
+    always @* //case要放到always内
+    begin 
+    	case(sub) //根据cout0的值选择是否反转
+            'b0: b1=b;
+            'b1: b1=~b+1; //反转并加1实现减法
+        endcase
+    end 
+    wire cout; 
+    add16 instance1( a[15:0] , b1[15:0], 0, sum[15:0],cout );
+    add16 instance2( a[31:16] , b1[31:16],cout, sum[31:16],0 );
+endmodule
+```
 
