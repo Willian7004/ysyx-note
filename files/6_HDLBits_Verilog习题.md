@@ -2,6 +2,10 @@
 
 以前在runoob上看过一点Verilog，但由于缺少说明，无法理解代码含义，后来就没有看了。本次课程中的hdlbits上虽然没有直接给出例程，但具有较为详细的说明，通常不需要另外查询资料就能完成。以下网站上的顺序记录各习题情况，也作为对知识点的记录。各部分均使用译文中的名称。
 
+另外吐槽一下，hdlbits连接很慢，开代理的改善比较小。后面查询发现服务器ip属地在加拿大，改用位于美国的代理服务器就快很多。
+
+### Verilog语言
+
 ### 基础
 
 **1.简单电线**
@@ -135,7 +139,6 @@ endmodule
 module top_module( 
     input [31:0] in,
     output [31:0] out );
-
     wire [7:0]b1;
     assign b1[7:0]=in[31:24]; //分配连续的多个位
     wire [7:0]b2;
@@ -164,10 +167,114 @@ module top_module(
     assign out_or_logical=a||b; //逻辑或
     assign out_not[5:3]=~b; //按位非
     assign out_not[2:0]=~a;
-
 endmodule
 ```
 
 **5.四输入门**
+```verilog
+module top_module( 
+    input [3:0] in,
+    output out_and,
+    output out_or,
+    output out_xor
+);
+    assign out_and=in[3]&in[2]&in[1]&in[0]; 
+    assign out_or=in[3]|in[2]|in[1]|in[0];
+    assign out_xor=in[3]^in[2]^in[1]^in[0];
+endmodule
+```
 
+**6.向量连接运算符**
+```verilog
+module top_module (
+    input [4:0] a, b, c, d, e, f,
+    output [7:0] w, x, y, z );
+    assign z[1]=1; //赋布尔值
+    assign z[0]=1;
+    assign{w, x, y, z[7:2]}={a, b, c, d, e, f}; //连接多位并赋值
+endmodule
+```
+
+**7.向量反转**
+```verilog
+module top_module( 
+    input [7:0] in,
+    output [7:0] out
+);
+    assign{out[7],out[6],out[5],out[4],out[3],out[2],out[1],out[0]}={in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7]}; //使用连接运算符改变顺序
+endmodule
+```
+
+**8.复制操作符**
+```verilog
+module top_module (
+    input [7:0] in,
+    output [31:0] out );
+    assign out={{24{in[7]}},in}; //重复24次in[7]并连接到前面
+endmodule
+```
+
+**9.更多复制**
+```verilog
+module top_module (
+    input a, b, c, d, e,
+    output [24:0] out );//
+    assign out[24:20]=~{a,a,a,a,a}^{a,b,c,d,e}; //每个信号与5个信号的一对一比较
+    assign out[19:15]=~{b,b,b,b,b}^{a,b,c,d,e};
+    assign out[14:10]=~{c,c,c,c,c}^{a,b,c,d,e};
+    assign out[9:5]=~{d,d,d,d,d}^{a,b,c,d,e};
+    assign out[4:0]=~{e,e,e,e,e}^{a,b,c,d,e};
+endmodule
+```
+
+### 模块：层次结构
+
+**1.模块**
+```verilog
+module top_module ( input a, input b, output out );
+    mod_a instance1 ( a, b, out ); //创建名为instance1的mod_a并把top_module的端口依次连接到mod_a的三个端口
+   endmodule
+```
+
+**2.按位置连接端口**
+```verilog
+module top_module ( 
+    input a, 
+    input b, 
+    input c,
+    input d,
+    output out1,
+    output out2
+);
+    mod_a instance1(out1,out2,a,b,c,d);
+endmodule
+```
+
+**3.通过名称连接端口**
+```verilog
+module top_module ( 
+    input a, 
+    input b, 
+    input c,
+    input d,
+    output out1,
+    output out2
+);
+    mod_a instance2 ( .in1(a), .in2(b), .in3(c), .in4(d), .out1(out1) , .out2(out2)); //.后面为mod_a的端口名称，括号内为top_module的端口名称
+endmodule
+```
+
+**4.三个模块**
+```verilog
+module top_module ( input clk, input d, output q );
+    wire q1;
+    my_dff instance1( clk, d,q1 ); //通过线连接不同自定义模块的输入和输出
+    wire q2;
+    my_dff instance2( clk,q1,q2);
+    my_dff instance3( clk,q2,q);
+endmodule
+```
+
+**5.模块和向量**
+```verilog
 
