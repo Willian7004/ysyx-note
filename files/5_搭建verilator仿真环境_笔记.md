@@ -321,6 +321,13 @@ signal (pin1, pin2, pin3)
 .v文件与文档相同，.cpp文件调整了几次顺序，编译通过
 
 ```cpp
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include "Vour.h"
+#include "verilated.h"
+
 #include "verilated_vcd_c.h" //可选，如果要导出vcd则需要加上
 
 VerilatedContext* contextp = new VerilatedContext;
@@ -362,4 +369,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 ```
+
+注意：由于系统故障，本笔记中的项目完成后的第二天进行了系统回滚，可能损失部分开发跟踪数据，只保证恢复最后一个示例的内容。
+
 
