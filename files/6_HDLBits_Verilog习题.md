@@ -292,7 +292,7 @@ module top_module (
     my_dff8 instance3(clk, q2, q3);
 
     always @* //case要放到always内
-    begin 
+        begin 
         case(sel) //在sel为相应的值的时候执行操作
             2'b00: q = d;
             2'b01: q = q1;
@@ -348,7 +348,7 @@ module top_module(
     add16 instance2(a[31:16], b[31:16], 0, sum_hi0, 0);
     add16 instance3(a[31:16], b[31:16], 1, sum_hi1, 0);
     always @* //case要放到always内
-    begin 
+        begin 
         case(cout0) //根据cout0的值选择合适的加法结果
             'b0: sum[31:16]=sum_hi0;
             'b1: sum[31:16]=sum_hi1;           
@@ -367,7 +367,7 @@ module top_module(
 );
     wire [31:0] b1;
     always @* //case要放到always内
-    begin 
+        begin 
     	case(sub) //根据cout0的值选择是否反转
             'b0: b1=b;
             'b1: b1=~b+1; //反转并加1实现减法
@@ -379,3 +379,104 @@ module top_module(
 endmodule
 ```
 
+### 程序
+
+**1.alwsys块（组合）**
+```verilog
+module top_module(
+    input a, 
+    input b,
+    output wire out_assign,
+    output reg out_alwaysblock
+);
+    assign out_assign=a&b;
+    always @* //case要放到always内
+	    begin 
+        case(a) 
+            'b0: out_alwaysblock=0;
+            'b1: out_alwaysblock=b; //与门a为1时输出等于b
+        endcase
+	end 
+
+endmodule
+```
+
+**2.alwsys块（时钟）**
+```verilog
+module top_module(
+    input clk,
+    input a,
+    input b,
+    output wire out_assign,
+    output reg out_always_comb,
+    output reg out_always_ff   );
+    assign out_assign=a^b; //赋值语句
+    always @* //组合always
+        begin 
+            case(a) 
+                'b0: out_always_comb=b;
+                'b1: out_always_comb=!b; 
+            endcase
+    end 
+    always @(posedge clk) //时钟always
+        begin 
+        case(a) 
+            'b0: out_always_ff<=b; //时钟always使用非阻塞赋值
+            'b1: out_always_ff<=!b; 
+        endcase
+    end 
+endmodule
+```
+
+**3.if语句**
+```verilog
+module top_module(
+    input a,
+    input b,
+    input sel_b1,
+    input sel_b2,
+    output wire out_assign,
+    output reg out_always   ); 
+	wire sel; 
+    assign sel=sel_b1&sel_b2;
+    assign out_assign=((sel&b)|(sel|a))&(!(sel&(!b)));
+    always @(*) begin
+        if (sel) begin //sel=1时选b，sel=0时选a
+            out_always = b;
+        end
+        else begin
+            out_always = a;
+        end
+    end   
+endmodule
+```
+**4.if语句锁**
+```verilog
+module top_module (
+    input      cpu_overheated,
+    output reg shut_off_computer,
+    input      arrived,
+    input      gas_tank_empty,
+    output reg keep_driving  ); 
+
+    always @(*) begin
+        if (cpu_overheated) begin
+           shut_off_computer = 1;
+        end
+        else begin //用else设置默认情况
+            shut_off_computer = 0;
+        end
+    end
+    always @(*) begin
+        if (~arrived) begin
+           keep_driving = ~gas_tank_empty;
+        end
+        else if(arrived) begin
+            keep_driving =0;
+        end
+        else begin
+            keep_driving =0;
+    	end
+    end
+endmodule
+```
