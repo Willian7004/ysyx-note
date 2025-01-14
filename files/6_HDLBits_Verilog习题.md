@@ -579,3 +579,35 @@ endmodule
 
 **1.条件三元运算符**
 ```verilog
+module top_module (
+    input [7:0] a, b, c, d,
+    output reg [7:0] min
+);
+    wire temp1, temp2, temp3, temp4, temp5, temp6;
+
+    assign temp1 = (a > b) ? 1 : 0; //条件为真则执行冒号前的语句，反之执行冒号后的
+    assign temp2 = (b > c) ? 1 : 0;
+    assign temp3 = (c > d) ? 1 : 0;
+    assign temp4 = (a > d) ? 1 : 0;
+    assign temp5 = (a > c) ? 1 : 0;
+    assign temp6 = (b > d) ? 1 : 0;
+
+    always @(*) begin
+        min = (temp3 == 1 && temp4 == 1 && temp6 == 1) ? d : //多路选择语句
+              (temp1 == 0 && temp4 == 0 && temp5 == 0) ? a :
+        	  (temp1 == 1 && temp2 == 0 && temp6 == 0) ? b :
+              c;
+    end
+endmodule
+```
+
+**2.位减少运算符**
+```verilog
+module top_module (
+    input [7:0] in,
+    output parity); 
+    assign parity=(^in[7:0]); //相对于对所有位执行相应的运算
+endmodule
+```
+
+**3.位减少：更宽的门**
