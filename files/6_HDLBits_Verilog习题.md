@@ -555,3 +555,27 @@ module top_module (
     end
 endmodule
 ```
+
+**8.避免锁定**
+```verilog
+module top_module (
+    input [15:0] scancode,
+    output reg left,
+    output reg down,
+    output reg right,
+    output reg up  ); 
+    always @(*) begin
+    up = 1'b0; down = 1'b0; left = 1'b0; right = 1'b0; //确保初始输出为0
+        case (scancode)
+            16'he06b:	left=1;  //左箭头
+            16'he072:	down=1;   //下箭头
+            16'he074:	right=1;   //右箭头
+            16'he075:	up=1;  //上箭头
+        endcase
+	end
+endmodule
+```
+### 更多特性
+
+**1.条件三元运算符**
+```verilog
