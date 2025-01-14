@@ -480,3 +480,78 @@ module top_module (
     end
 endmodule
 ```
+
+**5.case语句**
+```verilog
+module top_module ( 
+    input [2:0] sel, 
+    input [3:0] data0,
+    input [3:0] data1,
+    input [3:0] data2,
+    input [3:0] data3,
+    input [3:0] data4,
+    input [3:0] data5,
+    output reg [3:0] out   );
+    always@(*) begin  
+        case(sel) //根据sel的值给out赋值
+            3'b000: out = data0;
+			3'b001: out = data1;
+            3'b010: out = data2;
+			3'b011: out = data3;
+            3'b100: out = data4;
+			3'b101: out = data5;
+            3'b110: out = 0;
+			3'b111: out = 0;
+        endcase
+    end
+endmodule
+```
+
+**6.优先编码器**
+```verilog
+module top_module (
+    input [3:0] in,
+    output reg [1:0] pos  );
+    always@(*) begin  
+        case(in) //输出值为输入值中最低的为1的位
+            4'h0: pos = 2'b00;
+            4'h1: pos = 2'b00;
+            4'h2: pos = 2'b01;
+            4'h3: pos = 2'b00;
+            4'h4: pos = 2'b10;
+            4'h5: pos = 2'b00;
+            4'h6: pos = 2'b01;
+            4'h7: pos = 2'b00;
+            4'h8: pos = 2'b11;
+            4'h9: pos = 2'b00;
+            4'ha: pos = 2'b01;
+            4'hb: pos = 2'b00;
+            4'hc: pos = 2'b10;
+            4'hd: pos = 2'b00;
+            4'he: pos = 2'b01;
+            4'hf: pos = 2'b00;
+        endcase
+	end
+endmodule
+```
+
+**7.优先编码器带casez**
+```verilog
+module top_module (
+    input [7:0] in,
+    output reg [2:0] pos );
+    always@(*) begin  
+        casez(in[7:0]) //casez中用z设置不确定的值，用default设定其它情况
+            8'bzzzzzzz1: pos = 3'b000;
+            8'bzzzzzz10: pos = 3'b001;
+            8'bzzzzz100: pos = 3'b010;
+            8'bzzzz1000: pos = 3'b011;
+            8'bzzz10000: pos = 3'b100;
+            8'bzz100000: pos = 3'b101;
+            8'bz1000000: pos = 3'b110;
+            8'b10000000: pos = 3'b111;
+            default: pos = 3'b000;
+        endcase
+    end
+endmodule
+```
