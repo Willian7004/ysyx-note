@@ -4,17 +4,13 @@
 
 另外吐槽一下，hdlbits连接很慢，开代理的改善比较小。后面查询发现服务器ip属地在加拿大，改用位于美国的代理服务器就快很多。
 
-### Verilog语言
-
 ### 基础
-
 **1.简单电线**
 ```verilog
 module top_module( input in, output out );
 assign out=in; //输出端在等号左边
 endmodule
 ```
-
 **2.四根线**
 ```verilog
 module top_module( 
@@ -26,14 +22,12 @@ assign y=b;
 assign z=c;      
 endmodule
 ```
-
 **3.非门**
 ```verilog
 module top_module( input in, output out );
 assign out=!in; // ~为位非，!为逻辑非
 endmodule
 ```
-
 **4.与非门**
 ```verilog
 module top_module( 
@@ -43,7 +37,6 @@ module top_module(
 assign out=a&&b; // &为按位与，&&为逻辑与
 endmodule
 ```
-
 **5.或非门**
 ```verilog
 module top_module( 
@@ -53,7 +46,6 @@ module top_module(
     assign out=!(a|b); //|为按位或，||为逻辑或
 endmodule
 ```
-
 **6.异或非门**
 ```verilog
 module top_module( 
@@ -63,7 +55,6 @@ module top_module(
 assign out=!a^b; //^为按位异或，没有逻辑异或
 endmodule
 ```
-
 **7.声明导线**
 ```verilog
 module top_module(
@@ -81,7 +72,6 @@ module top_module(
     assign out_n=!(and1|and2);    
 endmodule
 ```
-
 **8.7458芯片**
 ```verilog
 module top_module ( 
@@ -105,9 +95,7 @@ assign and22=p1f&&and21;
 assign p1y=and12||and22;    
 endmodule
 ```
-
 ### 向量
-
 **1.向量**
 ```verilog
 module top_module ( 
@@ -122,7 +110,6 @@ assign o1=vec[1]; //选择特定的位
 assign o2=vec[2];
 endmodule
 ```
-
 **2.向量详细**
 ```verilog
 module top_module( 
@@ -133,7 +120,6 @@ module top_module(
     assign out_lo=in[7:0];
 endmodule
 ```
-
 **3.向量部分选择**
 ```verilog
 module top_module( 
@@ -153,7 +139,6 @@ module top_module(
     assign out[31:24]=b4;
 endmodule
 ```
-
 **4.位运算符**
 ```verilog
 module top_module( 
@@ -169,7 +154,6 @@ module top_module(
     assign out_not[2:0]=~a;
 endmodule
 ```
-
 **5.四输入门**
 ```verilog
 module top_module( 
@@ -183,7 +167,6 @@ module top_module(
     assign out_xor=in[3]^in[2]^in[1]^in[0];
 endmodule
 ```
-
 **6.向量连接运算符**
 ```verilog
 module top_module (
@@ -194,7 +177,6 @@ module top_module (
     assign{w, x, y, z[7:2]}={a, b, c, d, e, f}; //连接多位并赋值
 endmodule
 ```
-
 **7.向量反转**
 ```verilog
 module top_module( 
@@ -204,7 +186,6 @@ module top_module(
     assign{out[7],out[6],out[5],out[4],out[3],out[2],out[1],out[0]}={in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7]}; //使用连接运算符改变顺序
 endmodule
 ```
-
 **8.复制操作符**
 ```verilog
 module top_module (
@@ -213,7 +194,6 @@ module top_module (
     assign out={{24{in[7]}},in}; //重复24次in[7]并连接到前面
 endmodule
 ```
-
 **9.更多复制**
 ```verilog
 module top_module (
@@ -226,16 +206,13 @@ module top_module (
     assign out[4:0]=~{e,e,e,e,e}^{a,b,c,d,e};
 endmodule
 ```
-
 ### 模块：层次结构
-
 **1.模块**
 ```verilog
 module top_module ( input a, input b, output out );
     mod_a instance1 ( a, b, out ); //创建名为instance1的mod_a并把top_module的端口依次连接到mod_a的三个端口
    endmodule
 ```
-
 **2.按位置连接端口**
 ```verilog
 module top_module ( 
@@ -249,7 +226,6 @@ module top_module (
     mod_a instance1(out1,out2,a,b,c,d);
 endmodule
 ```
-
 **3.通过名称连接端口**
 ```verilog
 module top_module ( 
@@ -263,7 +239,6 @@ module top_module (
     mod_a instance2 ( .in1(a), .in2(b), .in3(c), .in4(d), .out1(out1) , .out2(out2)); //.后面为mod_a的端口名称，括号内为top_module的端口名称
 endmodule
 ```
-
 **4.三个模块**
 ```verilog
 module top_module ( input clk, input d, output q );
@@ -274,7 +249,6 @@ module top_module ( input clk, input d, output q );
     my_dff instance3( clk,q2,q);
 endmodule
 ```
-
 **5.模块和向量**
 ```verilog
 module top_module ( 
@@ -302,7 +276,6 @@ module top_module (
     end   
 endmodule
 ```
-
 **6.加法器1**
 ```verilog
 module top_module(
@@ -315,7 +288,6 @@ module top_module(
     add16 instance2( a[31:16] , b[31:16],cout, sum[31:16],0 );
 endmodule
 ```
-
 **7.加法器2**
 ```verilog
 module add1 (input a, input b, input cin, output sum, output cout); //全加器
@@ -333,7 +305,6 @@ module top_module (
     add16 instance2(a[31:16], b[31:16], cout0, sum[31:16], 0);
 endmodule
 ```
-
 **8.带选择加法器**
 ```verilog
 module top_module( 
@@ -356,7 +327,6 @@ module top_module(
     end  
 endmodule
 ```
-
 **9.加法器-减法器**
 ```verilog
 module top_module(
@@ -378,9 +348,7 @@ module top_module(
     add16 instance2( a[31:16] , b1[31:16],cout, sum[31:16],0 );
 endmodule
 ```
-
 ### 程序
-
 **1.alwsys块（组合）**
 ```verilog
 module top_module(
@@ -400,7 +368,6 @@ module top_module(
 
 endmodule
 ```
-
 **2.alwsys块（时钟）**
 ```verilog
 module top_module(
@@ -427,7 +394,6 @@ module top_module(
     end 
 endmodule
 ```
-
 **3.if语句**
 ```verilog
 module top_module(
@@ -480,7 +446,6 @@ module top_module (
     end
 endmodule
 ```
-
 **5.case语句**
 ```verilog
 module top_module ( 
@@ -506,7 +471,6 @@ module top_module (
     end
 endmodule
 ```
-
 **6.优先编码器**
 ```verilog
 module top_module (
@@ -534,7 +498,6 @@ module top_module (
 	end
 endmodule
 ```
-
 **7.优先编码器带casez**
 ```verilog
 module top_module (
@@ -555,7 +518,6 @@ module top_module (
     end
 endmodule
 ```
-
 **8.避免锁定**
 ```verilog
 module top_module (
@@ -576,7 +538,6 @@ module top_module (
 endmodule
 ```
 ### 更多特性
-
 **1.条件三元运算符**
 ```verilog
 module top_module (
@@ -600,7 +561,6 @@ module top_module (
     end
 endmodule
 ```
-
 **2.位减少运算符**
 ```verilog
 module top_module (
@@ -609,5 +569,45 @@ module top_module (
     assign parity=(^in[7:0]); //相对于对所有位执行相应的运算
 endmodule
 ```
-
 **3.位减少：更宽的门**
+```verilog
+module top_module( 
+    input [99:0] in,
+    output out_and,
+    output out_or,
+    output out_xor 
+);
+    assign out_and=(&in[99:0]);
+    assign out_or=(|in[99:0]);
+    assign out_xor=(^in[99:0]);
+endmodule
+```
+**4.组合for循环：向量反转2**
+```verilog
+module top_module( 
+    input [99:0] in,
+    output [99:0] out
+);
+    integer      i; //创建变量
+always @(*) begin
+    for (i=0; i<=99; i=i+1) begin //for循环实现位反转
+        out[i]=in[99-i];
+    end
+end
+endmodule
+```
+**5.组合or循环：255位计数**
+```verilog
+module top_module( 
+    input [254:0] in,
+    output [7:0] out );
+    integer      i; //创建变量    
+always @(*) begin
+    out=0;
+    for (i=0; i<=254; i=i+1) begin 
+        out=out+in[i]; //计算in中1的个数
+    end
+end
+endmodule
+```
+**6.100位二进制加法器**
