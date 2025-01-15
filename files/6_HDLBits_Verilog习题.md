@@ -46,7 +46,7 @@ module top_module(
     assign out=!(a|b); //|为按位或，||为逻辑或
 endmodule
 ```
-**6.异或非门**
+**6.异或非门（XNOR）**
 ```verilog
 module top_module( 
     input a, 
