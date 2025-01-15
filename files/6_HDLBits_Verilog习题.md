@@ -611,3 +611,55 @@ end
 endmodule
 ```
 **6.100位二进制加法器**
+```verilog
+module top_module( 
+    input [99:0] a, b,
+    input cin,
+    output [99:0] cout,
+    output [99:0] sum );
+
+    integer i; //创建中间变量
+    always @(*) begin
+        sum[0] = a[0] ^ b[0] ^ cin;  
+        cout[0] = (a[0] & b[0]) | (a[0] & cin) | (b[0] & cin);
+        for (i = 1; i <= 99; i = i + 1) begin 
+            sum[i] = a[i] ^ b[i] ^ cout[i-1];  //计算结果位
+            cout[i] = (a[i] & b[i]) | (a[i] & cout[i-1]) | (b[i] & cout[i-1]);//计算进位
+        end
+    end
+endmodule
+```
+**7.100位bcd加法器**
+```verilog
+module top_module( 
+    input [399:0] a, b,
+    input cin,
+    output cout,
+    output [399:0] sum );
+	genvar i; //genvar用于generate
+    wire [399:0] out ; //存储进位值
+generate //生成硬件结构
+    for (i = 0; i <= 396; i = i + 4) begin : adder_chain
+        if (i == 0) begin
+            bcd_fadd fa(
+                .a(a[(i+3):i]),
+                .b(b[(i+3):i]),
+                .cin(cin),
+                .sum(sum[(i+3):i]),
+                .cout(out[i])
+            );
+        end 
+        else begin
+            bcd_fadd fa(
+                .a(a[(i+3):i]),
+                .b(b[(i+3):i]),
+                .cin(out[i-4]),
+                .sum(sum[(i+3):i]),
+                .cout(out[i])
+            );
+        end
+    end
+endgenerate
+    assign cout=out[i-4];
+endmodule
+```
