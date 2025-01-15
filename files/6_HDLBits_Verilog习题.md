@@ -663,3 +663,4 @@ endgenerate
     assign cout=out[i-4];
 endmodule
 ```
+由于后续主要用Chisel开发并且后面的部分基本没有新的知识点，暂定不做HDLBits后面的部分。
